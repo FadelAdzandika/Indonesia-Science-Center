@@ -38,15 +38,15 @@ return [
             'report' => false,
         ],
 
-        'public' => [
+        'public_uploads' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
-            'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
+            'root' => public_path('uploads'), // Menyimpan di public/uploads
+            'url' => env('APP_URL').'/uploads', // URL untuk mengakses file
+            'visibility' => 'public', // File dapat diakses publik
+            'throw' => false, // Jangan lempar exception jika operasi file gagal
         ],
 
+        
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

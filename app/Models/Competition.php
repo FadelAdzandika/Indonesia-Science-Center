@@ -2,13 +2,34 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Competition extends Model
 {
     use HasFactory;
 
-    // Kolom yang boleh diisi mass assignment
-    protected $fillable = ['name', 'date', 'image'];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'title',
+        'description',
+        'thumbnail',      // Jika Anda berencana menggunakan thumbnail
+        'start_date',     // Contoh kolom tambahan
+        'end_date',       // Contoh kolom tambahan
+        // tambahkan kolom lain yang relevan
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'start_date' => 'date', // Contoh casting tipe data
+        'end_date' => 'date',   // Contoh casting tipe data
+    ];
 }

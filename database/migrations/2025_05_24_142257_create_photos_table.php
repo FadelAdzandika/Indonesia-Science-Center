@@ -4,20 +4,20 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+return new class extends Migration // Ensure this line is correct
 {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('photos', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->foreignId('photo_category_id')->constrained('photo_categories')->onDelete('cascade');
+            $table->string('title')->nullable();
+            $table->string('image_path');
             $table->text('description')->nullable();
-            $table->string('thumbnail')->nullable(); // Path ke gambar thumbnail
-            $table->date('event_date')->nullable();
-            $table->timestamps(); // Kolom created_at dan updated_at
+            $table->timestamps();
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('photos');
     }
 };

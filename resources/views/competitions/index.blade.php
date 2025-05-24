@@ -3,44 +3,61 @@
 @section('title', 'Daftar Kompetisi')
 
 @section('content')
-<div class="container py-4">
-  <h3 class="mb-4">Daftar Kompetisi</h3>
-  <a href="{{ route('competitions.create') }}" class="btn btn-primary mb-3">Tambah Kompetisi</a>
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Gambar</th>
-        <th>Nama Kompetisi</th>
-        <th>Tanggal</th>
-        <th>Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      @forelse($competitions as $competition)
-      <tr>
-        <td>
-          @if($competition->image)
-            <img src="{{ asset('storage/' . $competition->image) }}" alt="Competition Image" width="100">
-          @else
-            Tidak ada gambar
-          @endif
-        </td>
-        <td>{{ $competition->name }}</td>
-        <td>{{ $competition->date }}</td>
-        <td>
-          <a href="{{ route('competitions.edit', $competition) }}" class="btn btn-warning btn-sm">Edit</a>
-          <form action="{{ route('competitions.destroy', $competition) }}" method="POST" class="d-inline">
-            @csrf @method('DELETE')
-            <button class="btn btn-danger btn-sm" onclick="return confirm('Yakin hapus?')">Hapus</button>
-          </form>
-        </td>
-      </tr>
-      @empty
-      <tr>
-        <td colspan="4" class="text-center">Belum ada kompetisi.</td>
-      </tr>
-      @endforelse
-    </tbody>
-  </table>
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <h1 class="display-5 fw-bold">Kompetisi Terkini</h1>
+    <p class="lead text-muted">Asah kemampuan dan raih prestasi dalam berbagai kompetisi menarik kami.</p>
+  </div>
+
+  @if (session('success'))
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  @endif
+
+  @if($competitions->isNotEmpty())
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      @foreach($competitions as $competition)
+        <div class="col">
+          <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
+            @if($competition->thumbnail)
+              <a href="{{ route('competitions.show', $competition) }}">
+                <img src="{{ asset('storage/' . $competition->thumbnail) }}" class="card-img-top" alt="{{ $competition->title }}" style="height: 200px; object-fit: cover;">
+              </a>
+            @else
+              <a href="{{ route('competitions.show', $competition) }}">
+                <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                  <span class="text-white-50">Gambar tidak tersedia</span>
+                </div>
+              </a>
+            @endif
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold mb-2"><a href="{{ route('competitions.show', $competition) }}" class="text-decoration-none text-dark stretched-link">{{ Str::limit($competition->title, 50) }}</a></h5>
+              <p class="card-text text-muted small mb-3">
+                <i class="bi bi-calendar-play me-1"></i>
+                {{ $competition->start_date ? $competition->start_date->translatedFormat('D, d M Y') : 'Segera' }}
+                @if($competition->end_date)
+                 - {{ $competition->end_date->translatedFormat('D, d M Y') }}
+                @endif
+              </p>
+              @if($competition->description)
+                <p class="card-text text-muted flex-grow-1">{{ Str::limit(strip_tags($competition->description), 100) }}</p>
+              @endif
+            </div>
+          </div>
+        </div>
+      @endforeach
+    </div>
+    <div class="mt-5 d-flex justify-content-center">
+      {{ $competitions->links() }}
+    </div>
+  @else
+    <div class="text-center py-5">
+      <i class="bi bi-trophy-fill fs-1 text-muted mb-3"></i>
+      <h4 class="text-muted">Belum ada kompetisi yang tersedia saat ini.</h4>
+      <p class="text-muted">Nantikan informasi kompetisi kami selanjutnya!</p>
+    </div>
+  @endif
 </div>
 @endsection

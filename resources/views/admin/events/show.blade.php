@@ -12,6 +12,7 @@
         @endif
         <div class="card-body p-4 p-md-5">
           <h1 class="card-title h2 mb-3">{{ $event->title }}</h1>
+          
           <div class="d-flex align-items-center text-muted mb-4">
             <i class="bi bi-calendar-event me-2" style="font-size: 1.2rem;"></i>
             <span>{{ $event->event_date ? $event->event_date->translatedFormat('l, d F Y') : 'Tanggal akan diumumkan' }}</span>
@@ -27,8 +28,12 @@
           <hr class="my-4">
 
           <div class="text-center">
-            {{-- Tombol kembali ini akan selalu mengarah ke daftar event publik --}}
-            <a href="{{ route('events.index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left-circle me-1"></i> Kembali ke Daftar Event</a>
+            @if(Str::startsWith(Route::currentRouteName(), 'admin.'))
+              <a href="{{ route('admin.events.index') }}" class="btn btn-outline-secondary me-2"><i class="bi bi-arrow-left-circle me-1"></i> Kembali ke Daftar Admin</a>
+              <a href="{{ route('admin.events.edit', $event->id) }}" class="btn btn-primary"><i class="bi bi-pencil-square me-1"></i> Edit Event</a>
+            @else
+              <a href="{{ route('events.index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left-circle me-1"></i> Kembali ke Daftar Event</a>
+            @endif
           </div>
         </div>
       </div>

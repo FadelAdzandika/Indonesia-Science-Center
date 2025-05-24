@@ -126,10 +126,13 @@
           <a class="nav-link" href="{{ url('/') }}">Beranda</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Wahana</a>
+          <a class="nav-link {{ request()->routeIs('wahana.index') ? 'active' : '' }}" href="{{ route('wahana.index') }}">Wahana</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Program Sains</a>
+          <a class="nav-link {{ request()->routeIs('program-sains.index') ? 'active' : '' }}" href="{{ route('program-sains.index') }}">Program Sains</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {{ request()->routeIs('gallery.isc.index') ? 'active' : '' }}" href="{{ route('gallery.isc.index') }}">Galeri</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="eventDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -165,66 +168,102 @@
 </main>
 
 <!-- Footer -->
-<footer class="bg-dark text-white pt-5 pb-4 mt-5">
-  <div class="container">
-    <div class="row">
-      <!-- Logo and Description -->
-      <div class="col-md-4 mb-4">
-        <h5 class="mb-3">INDONESIA SCIENCE CENTER</h5>
-        <p class="small">Taman Mini Indonesia Indah, Jakarta Timur, DKI Jakarta 13810</p>
-        <p class="small mb-2">
-          <i class="bi bi-telephone me-2"></i> (021) 1234 5678
+{{-- ... (konten lain di layouts/app.blade.php) ... --}}
+
+<footer class="bg-dark text-white pt-5 pb-4">
+  <div class="container text-center text-md-start">
+    <div class="row text-center text-md-start">
+
+      <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+        <h5 class="text-uppercase mb-4 fw-bold text-primary">Indonesia Science Center</h5>
+        <p>
+          Pusat Eduwisata Sains Terbesar dan Terinspiratif di Indonesia.
         </p>
-        <p class="small mb-2">
-          <i class="bi bi-envelope me-2"></i> info@indonesiasciencecenter.co.id
+        {{-- Bisa tambahkan logo di sini jika ada --}}
+        {{-- <img src="{{ asset('images/logo-isc-putih.png') }}" alt="Logo ISC" style="height: 50px;" class="mb-2"> --}}
+      </div>
+
+      <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+        <h5 class="text-uppercase mb-4 fw-bold text-primary">Navigasi</h5>
+        <p>
+          <a href="{{ route('home') }}" class="text-white" style="text-decoration: none;">Beranda</a>
+        </p>
+        <p>
+          <a href="{{ route('wahana.index') }}" class="text-white" style="text-decoration: none;">Wahana</a>
+        </p>
+        <p>
+          <a href="{{ url('/#program') }}" class="text-white" style="text-decoration: none;">Program</a> {{-- Asumsi ada section program --}}
+        </p>
+        <p>
+          <a href="{{ route('events.index') }}" class="text-white" style="text-decoration: none;">Event</a>
+        </p>
+        <p>
+          <a href="{{ route('competitions.index') }}" class="text-white" style="text-decoration: none;">Kompetisi</a>
         </p>
       </div>
-      <!-- Quick Links -->
-      <div class="col-md-2 mb-4">
-        <h6 class="text-uppercase fw-bold mb-4">Tautan Cepat</h6>
-        <ul class="list-unstyled">
-          <li class="mb-2"><a href="#" class="text-white text-decoration-none small">Beranda</a></li>
-          <li class="mb-2"><a href="#" class="text-white text-decoration-none small">Tentang Kami</a></li>
-          <li class="mb-2"><a href="#" class="text-white text-decoration-none small">Galeri</a></li>
-          <li class="mb-2"><a href="#" class="text-white text-decoration-none small">Kontak</a></li>
-        </ul>
+
+      <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
+        <h5 class="text-uppercase mb-4 fw-bold text-primary">Informasi</h5>
+        <p>
+          <a href="{{ url('/#tentang-kami') }}" class="text-white" style="text-decoration: none;">Tentang Kami</a> {{-- Asumsi ada section tentang kami --}}
+        </p>
+        <p>
+          <a href="{{ route('kunjungan.create') }}" class="text-white" style="text-decoration: none;">Pesan Kunjungan</a>
+        </p>
+        <p>
+          <a href="#" class="text-white" style="text-decoration: none;">FAQ</a> {{-- Contoh link tambahan --}}
+        </p>
+        <p>
+          <a href="#" class="text-white" style="text-decoration: none;">Kontak</a> {{-- Contoh link tambahan --}}
+        </p>
       </div>
-      <!-- Programs -->
-      <div class="col-md-3 mb-4">
-        <h6 class="text-uppercase fw-bold mb-4">Program</h6>
-        <ul class="list-unstyled">
-          <li class="mb-2"><a href="#" class="text-white text-decoration-none small">Program Reguler Sains</a></li>
-          <li class="mb-2"><a href="#" class="text-white text-decoration-none small">Science Show</a></li>
-          <li class="mb-2"><a href="#" class="text-white text-decoration-none small">Science Cinema</a></li>
-          <li class="mb-2"><a href="#" class="text-white text-decoration-none small">Science Virtual Trip</a></li>
-        </ul>
-      </div>
-      <!-- Social Media -->
-      <div class="col-md-3 mb-4">
-        <h6 class="text-uppercase fw-bold mb-4">Ikuti Kami</h6>
-        <div class="d-flex">
-          <a href="#" class="me-3 text-white"><i class="bi bi-facebook fs-4"></i></a>
-          <a href="#" class="me-3 text-white"><i class="bi bi-twitter fs-4"></i></a>
-          <a href="#" class="me-3 text-white"><i class="bi bi-instagram fs-4"></i></a>
-          <a href="#" class="text-white"><i class="bi bi-youtube fs-4"></i></a>
+
+      <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
+        <h5 class="text-uppercase mb-4 fw-bold text-primary">Kontak Kami</h5>
+        <p><i class="bi bi-geo-alt-fill me-2"></i> Jl. Sains Terpadu No. 1, Jakarta</p>
+        <p><i class="bi bi-envelope-fill me-2"></i> <a href="mailto:info@isc-sains.co.id" class="text-white" style="text-decoration: none;">info@isc-sains.co.id</a></p>
+        <p><i class="bi bi-telephone-fill me-2"></i> +62 21 1234 5678</p>
+        {{-- Ikon Sosial Media --}}
+        <div class="mt-3">
+            <a href="https://www.instagram.com/ppiptek" target="_blank" class="text-white me-3" title="Instagram: @ppiptek">
+                <i class="bi bi-instagram" style="font-size: 1.5rem;"></i>
+            </a>
+            <a href="https://www.tiktok.com/@indonesiasciencecenter" target="_blank" class="text-white me-3" title="TikTok: Indonesia Science Center"> {{-- Ganti URL TikTok jika sudah ada --}}
+                <i class="bi bi-tiktok" style="font-size: 1.5rem;"></i>
+            </a>
+            <a href="https://www.youtube.com/@Humasppiptek" target="_blank" class="text-white" title="YouTube: Indonesia Science Center"> {{-- Ganti URL YouTube jika sudah ada --}}
+                <i class="bi bi-youtube" style="font-size: 1.5rem;"></i>
+            </a>
+            {{-- Ikon Facebook dan Twitter telah dihapus --}}
         </div>
       </div>
     </div>
-    <div class="border-top pt-4 mt-4">
-      <div class="row">
-        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-          <p class="small mb-0">&copy; 2025 Indonesia Science Center. All rights reserved.</p>
-        </div>
-        <div class="col-md-6 text-center text-md-end">
-          <p class="small mb-0">
-            <a href="#" class="text-white text-decoration-none me-3">Kebijakan Privasi</a>
-            <a href="#" class="text-white text-decoration-none">Syarat & Ketentuan</a>
-          </p>
+
+    <hr class="mb-4 mt-5">
+
+    <div class="row align-items-center">
+      <div class="col-md-7 col-lg-8">
+        <p class="text-center text-md-start">
+          © {{ date('Y') }} Hak Cipta:
+          <a href="{{ route('home') }}" class="text-white fw-bold" style="text-decoration: none;">
+            Indonesia Science Center
+          </a>
+        </p>
+      </div>
+      <div class="col-md-5 col-lg-4">
+        <div class="text-center text-md-end">
+          {{-- Bisa tambahkan link kebijakan privasi, dll. --}}
+          <a href="#" class="text-white me-2" style="text-decoration: none;">Kebijakan Privasi</a>
+          <a href="#" class="text-white" style="text-decoration: none;">Syarat & Ketentuan</a>
         </div>
       </div>
     </div>
   </div>
 </footer>
+{{-- ... (script js Anda) ... --}}
+</body>
+</html>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 @stack('scripts')

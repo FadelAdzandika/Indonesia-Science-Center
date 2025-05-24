@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('competitions', function (Blueprint $table) {
+        Schema::create('wahanas', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('name');
             $table->text('description')->nullable();
-            $table->string('thumbnail')->nullable(); // Path ke gambar thumbnail
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->string('icon')->nullable();
+            $table->string('color')->nullable();
+            $table->string('image')->nullable(); // Path ke gambar
             $table->timestamps(); // Kolom created_at dan updated_at
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('competitions');
+        Schema::dropIfExists('wahanas');
     }
 };
