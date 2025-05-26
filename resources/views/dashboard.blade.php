@@ -40,6 +40,50 @@
 .image-hover-overlay .photo-category {
     font-size: 0.85rem;
 }
+
+/* Styles for Teaser Gallery Slider */
+.teaser-gallery-slider-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden; /* Crucial for hiding non-visible slides */
+}
+
+.teaser-gallery-slider {
+    display: flex;
+    transition: transform 0.5s ease-in-out; /* Animation for sliding */
+    width: fit-content; /* Allow slider to be as wide as its content */
+}
+
+.teaser-gallery-slide {
+    flex: 0 0 auto; /* Prevent slides from shrinking/growing */
+    width: 280px; /* Adjust as needed, or use percentages for responsiveness */
+    margin-right: 15px; /* Space between slides */
+    box-sizing: border-box;
+}
+
+.teaser-gallery-slide .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.teaser-gallery-slide .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.slider-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+}
+.slider-nav-button.prev { left: 10px; }
+.slider-nav-button.next { right: 10px; }
 </style>
 @endpush
 
@@ -254,32 +298,39 @@
     <p class="text-center lead mb-5" style="font-size: 1.25rem; color: #555;">
         Lihat momen-momen seru dan menarik dari berbagai kegiatan di Indonesia Science Center.
     </p>
+
     @if(isset($teaserPhotos) && $teaserPhotos->isNotEmpty())
-      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
-        @foreach($teaserPhotos as $photo)
-          <div class="col ">
-            <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden image-hover-overlay-container">
-              <img src="{{ asset('uploads/' . $photo->image_path) }}" class="card-img-top" alt="{{ $photo->title ?? 'Foto Galeri ISC' }}" style="height: 200px; object-fit: cover; display: block;">
-              <div class="image-hover-overlay">
-                @if($photo->title)
-                  <div class="photo-title">{{ $photo->title }}</div>
-                @endif
-                @if($photo->photoCategory)
-                  <div class="photo-category">Kategori: {{ $photo->photoCategory->name }}</div>
-                @endif
-              </div>
+        <div class="teaser-gallery-slider-container">
+            <div class="teaser-gallery-slider">
+                @foreach($teaserPhotos as $photo)
+                    <div class="teaser-gallery-slide">
+                        <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden image-hover-overlay-container">
+                            <img src="{{ asset('uploads/' . $photo->image_path) }}" class="card-img-top" alt="{{ $photo->title ?? 'Foto Galeri ISC' }}" style="height: 200px; object-fit: cover; display: block;">
+                            <div class="image-hover-overlay">
+                                @if($photo->title)
+                                    <div class="photo-title">{{ $photo->title }}</div>
+                                @endif
+                                @if($photo->photoCategory)
+                                    <div class="photo-category">Kategori: {{ $photo->photoCategory->name }}</div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-          </div>
-        @endforeach
-      </div>
-      <div class="text-center mt-5">
-        <a href="{{ route('gallery.isc.index') }}" class="btn btn-primary btn-lg">Lihat Semua Galeri Foto</a>
-      </div>
+            @if($teaserPhotos->count() > 3) {{-- Tampilkan tombol hanya jika ada cukup item, sesuaikan angka 3 --}}
+                <button class="slider-nav-button prev" onclick="slideGallery('prev')"><i class="bi bi-chevron-left"></i></button>
+                <button class="slider-nav-button next" onclick="slideGallery('next')"><i class="bi bi-chevron-right"></i></button>
+            @endif
+        </div>
+        <div class="text-center mt-5">
+            <a href="{{ route('gallery.isc.index') }}" class="btn btn-primary btn-lg">Lihat Semua Galeri Foto</a>
+        </div>
     @else
-      <div class="text-center py-4">
-        <i class="bi bi-images fs-1 text-muted mb-3"></i>
-        <h4 class="text-muted">Galeri foto ISC akan segera hadir.</h4>
-      </div>
+        <div class="text-center py-4">
+            <i class="bi bi-images fs-1 text-muted mb-3"></i>
+            <h4 class="text-muted">Galeri foto ISC akan segera hadir.</h4>
+        </div>
     @endif
   </div>
 </section>
@@ -317,3 +368,39 @@
 {{-- Pastikan Anda memiliki @push('scripts') di layout utama jika ingin menggunakan modal --}}
 {{-- Jika ingin modal untuk teaser, tambahkan kode modal dan JS seperti di galeri Science Camp --}}
 {{-- Untuk saat ini, teaser hanya menampilkan gambar tanpa modal untuk kesederhanaan --}}
+
+@push('scripts')
+<script>
+    let currentSlide = 0;
+    const slider = document.querySelector('.teaser-gallery-slider');
+    const slides = document.querySelectorAll('.teaser-gallery-slide');
+    const slideWidth = slides.length > 0 ? slides[0].offsetWidth + parseInt(getComputedStyle(slides[0]).marginRight) : 0; // Lebar slide + margin
+    const visibleSlides = 3; // Jumlah slide yang ingin ditampilkan sekaligus, sesuaikan
+
+    function slideGallery(direction) {
+        const totalSlides = slides.length;
+        if (!slider || totalSlides === 0) return;
+
+        if (direction === 'next') {
+            // Cek apakah slide berikutnya akan melebihi batas
+            if (currentSlide < totalSlides - visibleSlides) {
+                currentSlide++;
+            } else {
+                // Opsional: kembali ke awal jika sudah di akhir
+                // currentSlide = 0;
+            }
+        } else if (direction === 'prev') {
+            if (currentSlide > 0) {
+                currentSlide--;
+            } else {
+                // Opsional: pergi ke akhir jika sudah di awal
+                // currentSlide = totalSlides - visibleSlides;
+            }
+        }
+        // Pastikan currentSlide tidak negatif atau melebihi batas yang wajar
+        currentSlide = Math.max(0, Math.min(currentSlide, totalSlides - visibleSlides));
+
+        slider.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+    }
+</script>
+@endpush
