@@ -90,11 +90,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 const email = document.getElementById('emailKunjungan').value;
                 const subjek = document.getElementById('subjekKunjungan').value;
                 const pesan = document.getElementById('pesanKunjungan').value;
-                const nomorWhatsApp = '6281234567890'; // GANTI DENGAN NOMOR WHATSAPP TUJUAN ANDA
+                const nomorWhatsApp = '628179934325'; // GANTI DENGAN NOMOR WHATSAPP TUJUAN ANDA
 
-                let pesanWhatsApp = `Halo Indonesia Science Center,\n\nSaya ingin merencanakan kunjungan:\n--------------------------------\n*Nama Pengunjung:* ${nama}\n*Email:* ${email}\n*Subjek Kunjungan:* ${subjek}\n--------------------------------\n*Detail Pesan:*\n${pesan}\n\nMohon informasinya. Terima kasih.`;
+                // Format pesan WhatsApp yang disesuaikan
+                let pesanWhatsApp = `Halo nama saya, ${nama}.
 
-                const urlWhatsApp = `https://wa.me/${nomorWhatsApp}?text=${encodeURIComponent(pesanWhatsApp)}`;
+Subjek Kunjungan: ${subjek}
+
+Berikut adalah detail rencana kunjungan saya:
+${pesan}
+
+Mohon informasinya. Terima kasih.`;
+
+                const urlWhatsApp = `https://web.whatsapp.com/send?phone=${nomorWhatsApp}&text=${encodeURIComponent(pesanWhatsApp)}`;
                 window.open(urlWhatsApp, '_blank');
                 // form.reset(); // Opsional: reset form setelah dikirim
                 // form.classList.remove('was-validated'); // Hapus kelas validasi setelah submit

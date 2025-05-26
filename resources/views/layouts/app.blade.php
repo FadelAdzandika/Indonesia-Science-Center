@@ -129,7 +129,7 @@
           <a class="nav-link {{ request()->routeIs('wahana.index') ? 'active' : '' }}" href="{{ route('wahana.index') }}">Wahana</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('program-sains.index') ? 'active' : '' }}" href="{{ route('program-sains.index') }}">Program Sains</a>
+          <a class="nav-link" href="{{ url('/#science-activity-program') }}">Program Sains</a>
         </li>
         <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('gallery.isc.index') ? 'active' : '' }}" href="{{ route('gallery.isc.index') }}">Galeri</a>
@@ -192,7 +192,7 @@
           <a href="{{ route('wahana.index') }}" class="text-white" style="text-decoration: none;">Wahana</a>
         </p>
         <p>
-          <a href="{{ url('/#program') }}" class="text-white" style="text-decoration: none;">Program</a> {{-- Asumsi ada section program --}}
+          <a href="{{ url('/#science-activity-program') }}" class="text-white" style="text-decoration: none;">Program</a>
         </p>
         <p>
           <a href="{{ route('events.index') }}" class="text-white" style="text-decoration: none;">Event</a>

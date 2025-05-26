@@ -169,7 +169,7 @@
 </section>
 
 <!-- Science Activity Program -->
-<section class="py-5">
+<section id="science-activity-program" class="py-5">
   <div class="container">
     <div class="section-title">SCIENCE ACTIVITY PROGRAM</div>
     <p class="text-center lead mb-5" style="font-size: 1.25rem; color: #555;">
