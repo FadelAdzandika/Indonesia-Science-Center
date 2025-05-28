@@ -14,11 +14,8 @@ class Wahana extends Model
         'description',
         'icon',
         'color',
-        'image',
+        'image', // Kolom gambar yang sudah ada
         'is_new',
-    ];
-
-    protected $casts = [
-        'is_new' => 'boolean', // Pastikan is_new selalu dianggap sebagai boolean
+        'video_embed_url', // Tambahkan ini
     ];
 }

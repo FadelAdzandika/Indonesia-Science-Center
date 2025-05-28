@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Dashboard | Indonesia Science Center'); ?>
 
-@section('title', 'Dashboard | Indonesia Science Center')
-
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
 .image-hover-overlay-container {
     position: relative;
@@ -85,9 +83,9 @@
 .slider-nav-button.prev { left: 10px; }
 .slider-nav-button.next { right: 10px; }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <!-- Hero -->
 <section class="hero-isc" style="
   background: #2956d7;
@@ -97,7 +95,7 @@
   position: relative;
   overflow: hidden;
 ">
-  <img src="{{ asset('images/kantor.jpg') }}"
+  <img src="<?php echo e(asset('images/kantor.jpg')); ?>"
        alt="Foto Kantor ISC"
        style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.18; pointer-events: none; z-index: 1;">
   <div class="container py-5 position-relative" style="z-index:2;">
@@ -107,8 +105,8 @@
         <div class="hero-isc-desc mb-4">
           Pusat Eduwisata Sains Terbesar dan<br>Terinspiratif di Indonesia
         </div>
-        <a href="{{route('wahana.index')}}" class="btn btn-green btn-lg me-2 mb-2">Lihat Wahana</a>
-        <a href="{{ route('kunjungan.create') }}" class="btn btn-outline-light btn-lg mb-2">Pesan Kunjungan</a>
+        <a href="<?php echo e(route('wahana.index')); ?>" class="btn btn-green btn-lg me-2 mb-2">Lihat Wahana</a>
+        <a href="<?php echo e(route('kunjungan.create')); ?>" class="btn btn-outline-light btn-lg mb-2">Pesan Kunjungan</a>
       </div>
     </div>
   </div>
@@ -119,33 +117,33 @@
   <div class="container">
     <div class="section-title">WAHANA TERBARU ISC</div>
     <div class="row justify-content-center">
-      @if(isset($latestWahanas) && $latestWahanas->isNotEmpty())
-        @foreach($latestWahanas as $wahana)
-          <div class="col-6 col-md-3 mb-4"> {{-- mb-4 untuk spasi jika ada beberapa baris di mobile --}}
-            <div class="isc-card h-100 d-flex flex-column text-center"> {{-- Tambahkan text-center agar konten di tengah --}}
-              {{-- Jika ingin menampilkan gambar wahana di sini --}}
-              @if($wahana->image)
-                <img src="{{ asset('uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" class="card-img-top" style="object-fit: cover; height: 120px; border-top-left-radius: 18px; border-top-right-radius: 18px;">
-              @endif
-              {{-- <div class="isc-card-icon {{ $wahana->color ?? 'text-primary' }}"><i class="bi {{ $wahana->icon ?? 'bi-app-indicator' }}"></i></div> --}} {{-- Ikon dan warna sudah dihapus dari form, jadi ini mungkin tidak relevan lagi atau bisa di-default-kan --}}
-              <div class="isc-card-title mt-2">{{ $wahana->name }}</div>
-              <p class="small text-muted px-2 mb-0">{{ Str::limit($wahana->description, 70) }}</p> {{-- Menampilkan 70 karakter deskripsi --}}
-              @if($wahana->video_embed_url)
-                <div class="mt-auto p-2 text-center"> {{-- mt-auto untuk mendorong ke bawah, p-2 untuk padding --}}
-                  <a href="{{ $wahana->video_embed_url }}" target="_blank" class="btn btn-sm btn-outline-danger w-100" title="Lihat Video {{ $wahana->name }}">
+      <?php if(isset($latestWahanas) && $latestWahanas->isNotEmpty()): ?>
+        <?php $__currentLoopData = $latestWahanas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $wahana): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+          <div class="col-6 col-md-3 mb-4"> 
+            <div class="isc-card h-100 d-flex flex-column text-center"> 
+              
+              <?php if($wahana->image): ?>
+                <img src="<?php echo e(asset('uploads/' . $wahana->image)); ?>" alt="<?php echo e($wahana->name); ?>" class="card-img-top" style="object-fit: cover; height: 120px; border-top-left-radius: 18px; border-top-right-radius: 18px;">
+              <?php endif; ?>
+               
+              <div class="isc-card-title mt-2"><?php echo e($wahana->name); ?></div>
+              <p class="small text-muted px-2 mb-0"><?php echo e(Str::limit($wahana->description, 70)); ?></p> 
+              <?php if($wahana->video_embed_url): ?>
+                <div class="mt-auto p-2 text-center"> 
+                  <a href="<?php echo e($wahana->video_embed_url); ?>" target="_blank" class="btn btn-sm btn-outline-danger w-100" title="Lihat Video <?php echo e($wahana->name); ?>">
                     <i class="bi bi-play-circle-fill"></i> Lihat Video
                   </a>
                 </div>
-              @else
-                {{-- Jika tidak ada video, mungkin tambahkan sedikit padding bawah agar konsisten jika ada deskripsi --}}
+              <?php else: ?>
+                
                 <div style="height: 10px;"></div>
-              @endif
+              <?php endif; ?>
             </div>
           </div>
-        @endforeach
-      @else
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+      <?php else: ?>
         <div class="col-12"><p class="text-center text-muted">Belum ada wahana terbaru saat ini.</p></div>
-      @endif
+      <?php endif; ?>
     </div>
   </div>
 </section>
@@ -155,32 +153,32 @@
   <div class="container">
     <div class="section-title">WAHANA GALERI ISC</div>
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
-      @if(isset($allWahanas) && $allWahanas->isNotEmpty())
-        @foreach($allWahanas as $wahana)
+      <?php if(isset($allWahanas) && $allWahanas->isNotEmpty()): ?>
+        <?php $__currentLoopData = $allWahanas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $wahana): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
           <div class="col">
             <div class="isc-card h-100 d-flex flex-column">
-              @if($wahana->image)
-                <img src="{{ asset('uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" class="card-img-top" style="object-fit: cover; height: 120px; border-top-left-radius: 18px; border-top-right-radius: 18px;">
-              @else
-                {{-- Placeholder jika tidak ada gambar --}}
+              <?php if($wahana->image): ?>
+                <img src="<?php echo e(asset('uploads/' . $wahana->image)); ?>" alt="<?php echo e($wahana->name); ?>" class="card-img-top" style="object-fit: cover; height: 120px; border-top-left-radius: 18px; border-top-right-radius: 18px;">
+              <?php else: ?>
+                
                 <div class="d-flex align-items-center justify-content-center" style="height: 120px; background-color: #e9ecef; border-top-left-radius: 18px; border-top-right-radius: 18px;">
                     <i class="bi bi-image text-muted" style="font-size: 2.5rem;"></i>
                 </div>
-              @endif
-              <div class="isc-card-title mt-2">{{ $wahana->name }}</div>
-               @if($wahana->video_embed_url)
+              <?php endif; ?>
+              <div class="isc-card-title mt-2"><?php echo e($wahana->name); ?></div>
+               <?php if($wahana->video_embed_url): ?>
                 <div class="mt-auto p-2 text-center">
-                  <a href="{{ $wahana->video_embed_url }}" target="_blank" class="btn btn-sm btn-outline-danger w-100" title="Lihat Video {{ $wahana->name }}">
+                  <a href="<?php echo e($wahana->video_embed_url); ?>" target="_blank" class="btn btn-sm btn-outline-danger w-100" title="Lihat Video <?php echo e($wahana->name); ?>">
                     <i class="bi bi-play-circle-fill"></i> Lihat Video
                   </a>
                 </div>
-              @endif
+              <?php endif; ?>
             </div>
           </div>
-        @endforeach
-      @else
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+      <?php else: ?>
         <div class="col-12"><p class="text-center text-muted">Belum ada wahana yang terdaftar.</p></div>
-      @endif
+      <?php endif; ?>
     </div>
   </div>
 </section>
@@ -195,47 +193,47 @@
     </p>
     <div class="row justify-content-center">
       <div class="col-6 col-md-3">
-        <div class="isc-card h-100 d-flex flex-column text-center"> {{-- Tambahkan text-center --}}
+        <div class="isc-card h-100 d-flex flex-column text-center"> 
           <div class="isc-card-icon"><i class="bi bi-truck"></i></div>
           <div class="isc-card-title">Mobile Science X</div>
           <p class="small text-muted px-2">Wahana sains keliling yang datang langsung ke sekolah atau komunitas Anda.</p>
           <div class="mt-auto p-2">
-            <a href="{{ route('gallery.isc.index') }}" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
+            <a href="<?php echo e(route('gallery.isc.index')); ?>" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
           </div>
         </div>
       </div>
       <div class="col-6 col-md-3">
-        <div class="isc-card h-100 d-flex flex-column text-center"> {{-- Tambahkan text-center --}}
+        <div class="isc-card h-100 d-flex flex-column text-center"> 
           <div class="isc-card-icon">
-            <img src="{{ asset('images/flask.png') }}" alt="Sanggar Kerja" style="height:48px;">
+            <img src="<?php echo e(asset('images/flask.png')); ?>" alt="Sanggar Kerja" style="height:48px;">
           </div>
           <div class="isc-card-title">Sanggar Kerja</div>
           <p class="small text-muted px-2">Workshop sains tematik yang dirancang khusus di lokasi ISC.</p>
           <div class="mt-auto p-2">
-            <a href="{{ route('gallery.isc.index') }}" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
+            <a href="<?php echo e(route('gallery.isc.index')); ?>" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
           </div>
         </div>
       </div>
       <div class="col-6 col-md-3">
-        <div class="isc-card h-100 d-flex flex-column text-center"> {{-- Tambahkan text-center --}}
+        <div class="isc-card h-100 d-flex flex-column text-center"> 
           <div class="isc-card-icon"><i class="bi bi-mic"></i></div>
           <div class="isc-card-title">Science Show</div>
           <p class="small text-muted px-2">Pertunjukan ilmiah yang spektakuler dan edukatif dengan tema berbeda setiap bulan.</p>
           <div class="mt-auto p-2">
-            <a href="{{ route('gallery.isc.index') }}" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
+            <a href="<?php echo e(route('gallery.isc.index')); ?>" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
           </div>
         </div>
 
       </div>
       <div class="col-6 col-md-3">
-        <div class="isc-card h-100 d-flex flex-column text-center"> {{-- Tambahkan text-center --}}
+        <div class="isc-card h-100 d-flex flex-column text-center"> 
           <div class="isc-card-icon mb-2" style="height:48px; display:flex; align-items:center; justify-content:center;">
-            <img src="{{ asset('images/tenda.png') }}" alt="Science Camp" style="height:48px; max-width:100%;">
+            <img src="<?php echo e(asset('images/tenda.png')); ?>" alt="Science Camp" style="height:48px; max-width:100%;">
           </div>
           <div class="isc-card-title">Science Camp</div>
           <p class="small text-muted px-2">Berkemah sambil belajar sains dan bermain outdoor games yang seru.</p>
-          <div class="mt-auto p-2"> {{-- mt-auto pushes this div to the bottom --}}
-            <a href="{{ route('gallery.isc.index') }}" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
+          <div class="mt-auto p-2"> 
+            <a href="<?php echo e(route('gallery.isc.index')); ?>" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
           </div>
       </div>
     </div>
@@ -247,63 +245,63 @@
   <div class="container">
     <div class="section-title">EVENT & KOMPETISI</div>
     <div class="row justify-content-center">
-      @if(isset($events) && $events->isNotEmpty())
-        @foreach($events as $event)
+      <?php if(isset($events) && $events->isNotEmpty()): ?>
+        <?php $__currentLoopData = $events; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
           <div class="col-6 col-md-3 mb-4">
             <div class="isc-card h-100 d-flex flex-column">
-              {{-- Menampilkan gambar thumbnail untuk event --}}
-              @if($event->thumbnail)
-                <img src="{{ asset('uploads/' . $event->thumbnail) }}" alt="{{ $event->title ?? 'Gambar Event' }}" class="card-img-top" style="object-fit: cover; height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-              @endif
-              <div class="isc-card-body p-3 flex-grow-1"> {{-- flex-grow-1 untuk mengisi ruang --}}
+              
+              <?php if($event->thumbnail): ?>
+                <img src="<?php echo e(asset('uploads/' . $event->thumbnail)); ?>" alt="<?php echo e($event->title ?? 'Gambar Event'); ?>" class="card-img-top" style="object-fit: cover; height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+              <?php endif; ?>
+              <div class="isc-card-body p-3 flex-grow-1"> 
                 <span class="badge bg-primary mb-2">EVENT</span>
-                <div class="isc-card-title">{{ $event->title ?? 'Judul Event' }}</div>
-                {{-- Menampilkan deskripsi singkat event --}}
-                @if($event->description)
-                  <p class="isc-card-text small text-muted mt-2 mb-0">{{ Str::limit(strip_tags($event->description), 70) }}</p>
-                @endif
+                <div class="isc-card-title"><?php echo e($event->title ?? 'Judul Event'); ?></div>
+                
+                <?php if($event->description): ?>
+                  <p class="isc-card-text small text-muted mt-2 mb-0"><?php echo e(Str::limit(strip_tags($event->description), 70)); ?></p>
+                <?php endif; ?>
               </div>
-              @if(Route::has('events.show') && isset($event->id))
-                <div class="p-3 pt-0 mt-auto text-center"> {{-- mt-auto untuk mendorong tombol ke bawah jika card flex --}}
-                  <a href="{{ route('events.show', $event->id) }}" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+              <?php if(Route::has('events.show') && isset($event->id)): ?>
+                <div class="p-3 pt-0 mt-auto text-center"> 
+                  <a href="<?php echo e(route('events.show', $event->id)); ?>" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
                 </div>
-              @endif
+              <?php endif; ?>
             </div>
           </div>
-        @endforeach
-      @endif
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+      <?php endif; ?>
 
-      @if(isset($competitions) && $competitions->isNotEmpty())
-        @foreach($competitions as $competition)
+      <?php if(isset($competitions) && $competitions->isNotEmpty()): ?>
+        <?php $__currentLoopData = $competitions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $competition): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
           <div class="col-6 col-md-3 mb-4">
             <div class="isc-card h-100 d-flex flex-column">
-              {{-- Menampilkan gambar thumbnail untuk kompetisi (jika ada dan diinginkan) --}}
-              @if($competition->thumbnail)
-                <img src="{{ asset('uploads/' . $competition->thumbnail) }}" alt="{{ $competition->title ?? 'Gambar Kompetisi' }}" class="card-img-top" style="object-fit: cover; height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
-              @endif
+              
+              <?php if($competition->thumbnail): ?>
+                <img src="<?php echo e(asset('uploads/' . $competition->thumbnail)); ?>" alt="<?php echo e($competition->title ?? 'Gambar Kompetisi'); ?>" class="card-img-top" style="object-fit: cover; height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+              <?php endif; ?>
               <div class="isc-card-body p-3 flex-grow-1">
                 <span class="badge bg-success mb-2">KOMPETISI</span>
-                <div class="isc-card-title">{{ $competition->title ?? 'Judul Kompetisi' }}</div>
-                {{-- Menampilkan deskripsi singkat kompetisi --}}
-                @if($competition->description)
-                  <p class="isc-card-text small text-muted mt-2 mb-0">{{ Str::limit(strip_tags($competition->description), 70) }}</p>
-                @endif
+                <div class="isc-card-title"><?php echo e($competition->title ?? 'Judul Kompetisi'); ?></div>
+                
+                <?php if($competition->description): ?>
+                  <p class="isc-card-text small text-muted mt-2 mb-0"><?php echo e(Str::limit(strip_tags($competition->description), 70)); ?></p>
+                <?php endif; ?>
               </div>
-              @if(Route::has('competitions.show') && isset($competition->id))
+              <?php if(Route::has('competitions.show') && isset($competition->id)): ?>
                 <div class="p-3 pt-0 mt-auto text-center">
-                  <a href="{{ route('competitions.show', $competition->id) }}" class="btn btn-sm btn-outline-success">Lihat Detail</a>
+                  <a href="<?php echo e(route('competitions.show', $competition->id)); ?>" class="btn btn-sm btn-outline-success">Lihat Detail</a>
                 </div>
-              @endif
+              <?php endif; ?>
             </div>
           </div>
-        @endforeach
-      @endif
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+      <?php endif; ?>
 
-      @if((!isset($events) || $events->isEmpty()) && (!isset($competitions) || $competitions->isEmpty()))
+      <?php if((!isset($events) || $events->isEmpty()) && (!isset($competitions) || $competitions->isEmpty())): ?>
         <div class="col-12">
           <p class="text-center text-white">Tidak ada event atau kompetisi terbaru saat ini.</p>
         </div>
-      @endif
+      <?php endif; ?>
     </div>
   </div>
 </section>
@@ -316,39 +314,39 @@
         Lihat momen-momen seru dan menarik dari berbagai kegiatan di Indonesia Science Center.
     </p>
 
-    @if(isset($teaserPhotos) && $teaserPhotos->isNotEmpty())
+    <?php if(isset($teaserPhotos) && $teaserPhotos->isNotEmpty()): ?>
         <div class="teaser-gallery-slider-container">
             <div class="teaser-gallery-slider">
-                @foreach($teaserPhotos as $photo)
+                <?php $__currentLoopData = $teaserPhotos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $photo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="teaser-gallery-slide">
                         <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden image-hover-overlay-container">
-                            <img src="{{ asset('uploads/' . $photo->image_path) }}" class="card-img-top" alt="{{ $photo->title ?? 'Foto Galeri ISC' }}" style="height: 200px; object-fit: cover; display: block;">
+                            <img src="<?php echo e(asset('uploads/' . $photo->image_path)); ?>" class="card-img-top" alt="<?php echo e($photo->title ?? 'Foto Galeri ISC'); ?>" style="height: 200px; object-fit: cover; display: block;">
                             <div class="image-hover-overlay">
-                                @if($photo->title)
-                                    <div class="photo-title">{{ $photo->title }}</div>
-                                @endif
-                                @if($photo->photoCategory)
-                                    <div class="photo-category">Kategori: {{ $photo->photoCategory->name }}</div>
-                                @endif
+                                <?php if($photo->title): ?>
+                                    <div class="photo-title"><?php echo e($photo->title); ?></div>
+                                <?php endif; ?>
+                                <?php if($photo->photoCategory): ?>
+                                    <div class="photo-category">Kategori: <?php echo e($photo->photoCategory->name); ?></div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </div>
-            @if($teaserPhotos->count() > 3) {{-- Tampilkan tombol hanya jika ada cukup item, sesuaikan angka 3 --}}
+            <?php if($teaserPhotos->count() > 3): ?> 
                 <button class="slider-nav-button prev" onclick="slideGallery('prev')"><i class="bi bi-chevron-left"></i></button>
                 <button class="slider-nav-button next" onclick="slideGallery('next')"><i class="bi bi-chevron-right"></i></button>
-            @endif
+            <?php endif; ?>
         </div>
         <div class="text-center mt-5">
-            <a href="{{ route('gallery.isc.index') }}" class="btn btn-primary btn-lg">Lihat Semua Galeri Foto</a>
+            <a href="<?php echo e(route('gallery.isc.index')); ?>" class="btn btn-primary btn-lg">Lihat Semua Galeri Foto</a>
         </div>
-    @else
+    <?php else: ?>
         <div class="text-center py-4">
             <i class="bi bi-images fs-1 text-muted mb-3"></i>
             <h4 class="text-muted">Galeri foto ISC akan segera hadir.</h4>
         </div>
-    @endif
+    <?php endif; ?>
   </div>
 </section>
 
@@ -380,13 +378,13 @@
   </div>
 </section>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-{{-- Pastikan Anda memiliki @push('scripts') di layout utama jika ingin menggunakan modal --}}
-{{-- Jika ingin modal untuk teaser, tambahkan kode modal dan JS seperti di galeri Science Camp --}}
-{{-- Untuk saat ini, teaser hanya menampilkan gambar tanpa modal untuk kesederhanaan --}}
 
-@push('scripts')
+
+
+
+<?php $__env->startPush('scripts'); ?>
 <script>
     let currentSlide = 0;
     const slider = document.querySelector('.teaser-gallery-slider');
@@ -438,4 +436,5 @@
         });
     }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\Indonesia_Science_Center\resources\views/dashboard.blade.php ENDPATH**/ ?>

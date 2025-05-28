@@ -14,8 +14,8 @@ class WahanaController extends Controller
      */
     public function index()
     {
-        $wahanas = Wahana::orderBy('name', 'asc')->get(); // Ambil semua wahana, urutkan berdasarkan nama
-        return view('wahana.index', compact('wahanas')); // Mengarah ke view publik wahana.index
+        $wahanas = Wahana::orderBy('name', 'asc')->paginate(10); // Ganti 10 dengan jumlah item per halaman yang Anda inginkan
+        return view('admin.wahana.index', compact('wahanas'));
     }
 
     /**
@@ -23,7 +23,7 @@ class WahanaController extends Controller
      */
     public function create()
     {
-        return view('admin.wahanas.create');
+        return view('admin.wahana.create');
     }
 
     /**
@@ -37,6 +37,8 @@ class WahanaController extends Controller
             'icon' => 'nullable|string|max:255',
             'color' => 'nullable|string|max:70', // Misal: text-primary, atau hex #RRGGBB
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'video_embed_url' => 'nullable|url|max:500', // Validasi untuk URL video
+
             // 'is_new' tidak perlu validasi khusus jika menggunakan $request->boolean()
         ]);
 
@@ -46,15 +48,16 @@ class WahanaController extends Controller
         $wahana->icon = $request->icon;
         $wahana->color = $request->color;
         $wahana->is_new = $request->boolean('is_new'); // Mengambil nilai boolean dari checkbox
+        $wahana->video_embed_url = $request->video_embed_url; // Tambahkan baris ini
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('wahanas', 'public'); // Simpan gambar di storage/app/public/wahanas
+            $imagePath = $request->file('image')->store('wahanas', 'public_uploads'); // Pastikan disk 'public_uploads' sudah dikonfigurasi di filesystems.php
             $wahana->image = $imagePath;
         }
 
         $wahana->save();
 
-        return redirect()->route('admin.wahanas.index')->with('success', 'Wahana berhasil ditambahkan!');
+        return redirect()->route('admin.wahana.index')->with('success', 'Wahana berhasil ditambahkan!');
     }
 
     /**
@@ -62,7 +65,7 @@ class WahanaController extends Controller
      */
     public function edit(Wahana $wahana)
     {
-        return view('admin.wahanas.edit', compact('wahana'));
+        return view('admin.wahana.edit', compact('wahana'));
     }
 
     /**
@@ -76,6 +79,8 @@ class WahanaController extends Controller
             'icon' => 'nullable|string|max:255',
             'color' => 'nullable|string|max:70',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'video_embed_url' => 'nullable|url|max:500', // Validasi untuk URL video
+
         ]);
 
         $wahana->name = $request->name;
@@ -83,19 +88,20 @@ class WahanaController extends Controller
         $wahana->icon = $request->icon;
         $wahana->color = $request->color;
         $wahana->is_new = $request->boolean('is_new'); // Mengupdate nilai boolean dari checkbox
+        $wahana->video_embed_url = $request->video_embed_url;
 
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada
             if ($wahana->image) {
-                Storage::disk('public')->delete($wahana->image);
+                Storage::disk('public_uploads')->delete($wahana->image);
             }
-            $imagePath = $request->file('image')->store('wahanas', 'public');
+            $imagePath = $request->file('image')->store('wahanas', 'public_uploads');
             $wahana->image = $imagePath;
         }
 
         $wahana->save();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Wahana berhasil diperbarui!');
+        return redirect()->route('admin.wahana.index')->with('success', 'Wahana berhasil diperbarui!');
     }
 
     // Metode destroy() bisa Anda tambahkan jika belum ada, sesuai file admin.wahanas.index.blade.php
@@ -106,11 +112,11 @@ class WahanaController extends Controller
     {
         // Hapus gambar terkait jika ada
         if ($wahana->image) {
-            Storage::disk('public')->delete($wahana->image);
+            Storage::disk('public_uploads')->delete($wahana->image);
         }
 
         $wahana->delete();
 
-        return redirect()->route('admin.wahanas.index')->with('success', 'Wahana berhasil dihapus!');
+        return redirect()->route('admin.wahana.index')->with('success', 'Wahana berhasil dihapus!');
     }
 }

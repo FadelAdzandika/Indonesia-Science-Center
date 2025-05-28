@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Pesan Kunjungan | Indonesia Science Center'); ?>
 
-@section('title', 'Pesan Kunjungan | Indonesia Science Center')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <section id="kunjungan-form" class="py-5 bg-light">
     <div class="container">
         <div class="text-center mb-5">
@@ -16,10 +14,9 @@
         <div class="row g-lg-5 align-items-stretch justify-content-center">
             <div class="col-lg-6 mb-4 mb-lg-0">
                 <div class="card shadow-sm border-0 rounded-3 h-100 d-flex flex-column">
-                    {{-- Jika ingin tetap ada gambar di kiri form, bisa diaktifkan lagi --}}
-                    {{-- <div class="col-md-6 d-none d-md-block" style="background-image: url('{{ asset('images/kantor.jpg') }}'); background-size: cover; background-position: center; border-top-left-radius: 0.25rem; border-bottom-left-radius: 0.25rem; min-height: 400px;">
-                    </div> --}}
-                    {{-- <div class="col-md-12"> --}}
+                    
+                    
+                    
                     <div class="card-body p-4 p-lg-5 d-flex flex-column">
                         <h3 class="fw-bold mb-4 text-center">Formulir Kunjungan</h3>
                         <form id="pesanKunjunganForm" class="needs-validation flex-grow-1" novalidate>
@@ -48,7 +45,7 @@
                             </button>
                         </form>
                     </div>
-                    {{-- </div> --}}
+                    
                 </div>
             </div>
 
@@ -71,9 +68,9 @@
         </div>
     </div>
 </section>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     // Bootstrap form validation
@@ -112,9 +109,9 @@ Mohon informasinya. Terima kasih.`;
     });
 });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
 <style>
     /* Anda bisa menambahkan custom style di sini jika diperlukan */
     #kunjungan-form .card {
@@ -124,4 +121,5 @@ Mohon informasinya. Terima kasih.`;
         box-shadow: 0 .5rem 1rem rgba(0,0,0,.1)!important; /* Sedikit lebih halus dari shadow-lg */
     }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\Indonesia_Science_Center\resources\views/kunjungan/create.blade.php ENDPATH**/ ?>

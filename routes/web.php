@@ -2,9 +2,12 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\CompetitionController;
-use App\Http\Controllers\Admin\WahanaController; // Controller untuk publik
+use App\Http\Controllers\EventController; // Ini akan jadi controller publik untuk Event
+use App\Http\Controllers\Admin\EventController as AdminEventController; // Controller Admin untuk Event
+use App\Http\Controllers\CompetitionController; // Ini akan jadi controller publik untuk Kompetisi
+use App\Http\Controllers\Admin\CompetitionController as AdminCompetitionController; // Controller Admin untuk Kompetisi
+use App\Http\Controllers\Admin\WahanaController as AdminWahanaController; // Mengganti nama alias untuk kejelasan, ini adalah controller Admin
+use App\Http\Controllers\WahanaController; // Asumsikan ini adalah WahanaController untuk publik // Controller untuk publik
 use App\Http\Controllers\Admin\PhotoCategoryController; // Tambahkan ini
 use App\Http\Controllers\Admin\PhotoController; // Tambahkan ini untuk PhotoController
 use App\Http\Controllers\PageController; // Tambahkan ini
@@ -37,16 +40,14 @@ Route::post('register', [RegisterController::class, 'register']);
 
 // Dashboard Admin (hanya untuk admin yang sudah login)
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard'); // menjadi admin.dashboard
-    Route::resource('events', EventController::class); // Cukup 'events', karena sudah di dalam grup 'admin'
-    Route::resource('competitions', CompetitionController::class); // Path ke controller ini mungkin App\Http\Controllers\Admin\CompetitionController
-    Route::resource('wahanas', \App\Http\Controllers\Admin\WahanaController::class); // Pastikan path ke Admin WahanaController benar
-    Route::resource('photos', PhotoController::class); // Tambahkan ini untuk manajemen foto
-    Route::resource('photo-categories', PhotoCategoryController::class); // Untuk kategori galeri foto
+     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('events', AdminEventController::class);
+    Route::resource('competitions', AdminCompetitionController::class);
+    Route::resource('wahana', AdminWahanaController::class); // Ganti 'wahanas' jadi 'wahana' agar konsisten
+    Route::resource('photos', PhotoController::class);
+    Route::resource('photo-categories', PhotoCategoryController::class);
 });
-
-Route::get('/wahana', [WahanaController::class, 'index'])->name('wahana.index'); // Menggunakan controller publik untuk daftar wahana
-
+Route::get('/wahana', [WahanaController::class, 'index'])->name('wahana.index');
 Route::get('/pesan-kunjungan', function () {
     return view('kunjungan.create'); // Pastikan file view 'kunjungan.create.blade.php' ada
 })->name('kunjungan.create');
