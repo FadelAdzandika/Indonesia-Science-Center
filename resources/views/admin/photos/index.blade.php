@@ -33,9 +33,7 @@
                     <td>{{ $photo->id }}</td>
                     <td>
                         @if ($photo->image_path)
-                            {{-- Sesuaikan path jika Anda menggunakan disk 'public' dan storage:link --}}
-                            {{-- <img src="{{ asset('storage/' . $photo->image_path) }}" alt="{{ $photo->title ?? 'Foto' }}" width="100" class="img-thumbnail"> --}}
-                            <img src="{{ asset('uploads/' . $photo->image_path) }}" alt="{{ $photo->title ?? 'Foto' }}" width="100" class="img-thumbnail">
+                            <img src="{{ asset('public/uploads/' . $photo->image_path) }}" alt="{{ $photo->title ?? 'Foto' }}" width="100" class="img-thumbnail">
                         @else
                             <span class="text-muted">Tidak ada gambar</span>
                         @endif

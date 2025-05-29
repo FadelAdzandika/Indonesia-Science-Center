@@ -6,7 +6,6 @@ use App\Models\Photo;
 use App\Models\PhotoCategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller; // Ensure you are extending the base Controller
-use Illuminate\Support\Facades\Storage;
 
 class PhotoController extends Controller
 {
@@ -40,19 +39,19 @@ class PhotoController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $imagePath = null;
+        $dataToCreate = $request->only(['photo_category_id', 'title', 'description']);
         if ($request->hasFile('image')) {
-            // Assumes you have a disk 'public_uploads' configured in filesystems.php
-            // that points to public_path('uploads')
-            $imagePath = $request->file('image')->store('gallery_photos', 'public_uploads');
+             $file = $request->file('image');
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+            
+            $file->move(Photo::getUploadPath(), $filename);
+            $dataToCreate['image_path'] = Photo::getRelativePath($filename);
+        } else {
+            $dataToCreate['image_path'] = null; // Atau sesuai dengan default field Anda
         }
 
-        Photo::create([
-            'photo_category_id' => $request->photo_category_id,
-            'title' => $request->title,
-            'image_path' => $imagePath,
-            'description' => $request->description,
-        ]);
+        Photo::create($dataToCreate);
+
 
         return redirect()->route('admin.photos.index')->with('success', 'Foto berhasil ditambahkan.');
     }
@@ -82,11 +81,13 @@ class PhotoController extends Controller
 
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada dan gambar baru diupload
-            if ($photo->image_path && Storage::disk('public_uploads')->exists($photo->image_path)) {
-                Storage::disk('public_uploads')->delete($photo->image_path);
+            if ($photo->image_path && file_exists(Photo::getUploadPath() . '/' . basename($photo->image_path))) {
+                unlink(Photo::getUploadPath() . '/' . basename($photo->image_path));
             }
-            // Simpan gambar baru dan tambahkan path ke data yang akan diupdate
-            $dataToUpdate['image_path'] = $request->file('image')->store('gallery_photos', 'public_uploads');
+            $file = $request->file('image');
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+            $file->move(Photo::getUploadPath(), $filename);
+            // $dataToUpdate['image_path'] = $photo->image_path; // Tidak perlu jika $request->only() tidak menyertakannya
         } else {
             // Jika tidak ada gambar baru, pertahankan path gambar lama
             $dataToUpdate['image_path'] = $photo->image_path;
@@ -102,8 +103,8 @@ class PhotoController extends Controller
      */
     public function destroy(Photo $photo)
     {
-        if ($photo->image_path && Storage::disk('public_uploads')->exists($photo->image_path)) {
-            Storage::disk('public_uploads')->delete($photo->image_path);
+        if ($photo->image_path && file_exists(Photo::getUploadPath() . '/' . basename($photo->image_path))) {
+            unlink(Photo::getUploadPath() . '/' . basename($photo->image_path));
         }
         $photo->delete();
         return redirect()->route('admin.photos.index')->with('success', 'Foto berhasil dihapus.');

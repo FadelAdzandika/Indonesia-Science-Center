@@ -30,4 +30,35 @@ class Event extends Model
     protected $casts = [
         'event_date' => 'date', // Contoh casting tipe data
     ];
+
+    
+    /**
+     * Base directory for event uploads within the public/uploads path.
+     */
+    public static string $uploadDirectory = 'events';
+
+    /**
+     * Get the absolute path to the event upload directory.
+     *
+     * @return string
+     */
+    public static function getUploadPath(): string
+    {
+        // Menggunakan public_path() yang mungkin sudah di-override di AppServiceProvider
+        return public_path('uploads/' . self::$uploadDirectory);
+    }
+
+    /**
+     * Get the relative path for storing in the database.
+     *
+     * @param string $filename
+     * @return string
+     */
+    public static function getRelativePath(string $filename): string
+    {
+        return self::$uploadDirectory . '/' . $filename;
+    }
+
+    // Anda bisa menambahkan accessor getImageUrlAttribute jika diperlukan
+    // seperti pada model Wahana
 }

@@ -19,12 +19,12 @@
   @if($events->isNotEmpty())
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       @foreach($events as $event)
-        <div class="col">
-          <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
+        <div class="col d-flex align-items-stretch">
+          <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden w-100 d-flex flex-column"> {{-- Tambahkan h-100 dan pastikan d-flex flex-column --}}
             @if($event->thumbnail)
-              <a href="{{ route('events.show', $event) }}">
-                <img src="{{ asset('storage/' . $event->thumbnail) }}" class="card-img-top" alt="{{ $event->title }}" style="height: 200px; object-fit: cover;">
-              </a>
+            <a href="{{ route('events.show', $event) }}">
+              <img src="{{ asset('public/uploads/' . $event->thumbnail) }}" class="card-img-top" alt="{{ $event->title }}"> {{-- Hapus style height dan object-fit --}}
+            </a>
             @else
               <a href="{{ route('events.show', $event) }}">
                 <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">

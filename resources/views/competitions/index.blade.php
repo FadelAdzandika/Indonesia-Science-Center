@@ -19,15 +19,15 @@
   @if($competitions->isNotEmpty())
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
       @foreach($competitions as $competition)
-        <div class="col">
-          <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
+          <div class="col d-flex align-items-stretch">
+          <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden w-100 d-flex flex-column"> {{-- Tambahkan h-100 dan pastikan d-flex flex-column --}}
             @if($competition->thumbnail)
               <a href="{{ route('competitions.show', $competition) }}">
-                <img src="{{ asset('storage/' . $competition->thumbnail) }}" class="card-img-top" alt="{{ $competition->title }}" style="height: 200px; object-fit: cover;">
+                <img src="{{ asset('public/uploads/' . $competition->thumbnail) }}" class="card-img-top" alt="{{ $competition->title }}">
               </a>
             @else
               <a href="{{ route('competitions.show', $competition) }}">
-                <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                <div class="bg-secondary d-flex align-items-center justify-content-center card-img-top" style="min-height: 150px;"> {{-- Beri min-height untuk placeholder --}}
                   <span class="text-white-50">Gambar tidak tersedia</span>
                 </div>
               </a>

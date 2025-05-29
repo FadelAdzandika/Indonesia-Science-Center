@@ -80,20 +80,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const forms = document.querySelectorAll('.needs-validation');
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-            } else {
-                // Jika form valid, lanjutkan dengan logika WhatsApp
-                event.preventDefault(); // Tetap cegah submit default agar bisa kirim ke WA
-                const nama = document.getElementById('namaKunjungan').value;
-                const email = document.getElementById('emailKunjungan').value;
-                const subjek = document.getElementById('subjekKunjungan').value;
-                const pesan = document.getElementById('pesanKunjungan').value;
-                const nomorWhatsApp = '628111199444'; // GANTI DENGAN NOMOR WHATSAPP TUJUAN ANDA
+    if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+    } else {
+        event.preventDefault();
+        const nama = document.getElementById('namaKunjungan').value;
+        const email = document.getElementById('emailKunjungan').value;
+        const subjek = document.getElementById('subjekKunjungan').value;
+        const pesan = document.getElementById('pesanKunjungan').value;
+        const nomorWhatsApp = '628111199444'; // GANTI DENGAN NOMOR WHATSAPP TUJUAN ANDA
 
-                // Format pesan WhatsApp yang disesuaikan
-                let pesanWhatsApp = `Halo nama saya, ${nama}.
+        let pesanWhatsApp = `Halo nama saya, ${nama}.
 
 Subjek Kunjungan: ${subjek}
 
@@ -102,13 +100,18 @@ ${pesan}
 
 Mohon informasinya. Terima kasih.`;
 
-                const urlWhatsApp = `https://web.whatsapp.com/send?phone=${nomorWhatsApp}&text=${encodeURIComponent(pesanWhatsApp)}`;
-                window.open(urlWhatsApp, '_blank');
-                // form.reset(); // Opsional: reset form setelah dikirim
-                // form.classList.remove('was-validated'); // Hapus kelas validasi setelah submit
-            }
-            form.classList.add('was-validated');
-        }, false);
+        // Deteksi perangkat
+        const isMobile = /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase());
+        const baseUrl = isMobile
+            ? `https://wa.me/${nomorWhatsApp}?text=${encodeURIComponent(pesanWhatsApp)}`
+            : `https://web.whatsapp.com/send?phone=${nomorWhatsApp}&text=${encodeURIComponent(pesanWhatsApp)}`;
+
+        window.open(baseUrl, '_blank');
+        // form.reset(); // Opsional: reset form setelah dikirim
+        // form.classList.remove('was-validated');
+    }
+    form.classList.add('was-validated');
+}, false);
     });
 });
 </script>

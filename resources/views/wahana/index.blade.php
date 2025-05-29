@@ -13,24 +13,25 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
       @foreach($wahanas as $wahana)
         <div class="col">
-          <div class="card h-100 shadow-sm border-0 rounded-lg text-center isc-card-wahana overflow-hidden"> {{-- Tambahkan overflow-hidden --}}
+          <div class="card h-100 shadow-sm border-0 rounded-lg text-center isc-card-wahana overflow-hidden d-flex flex-column">
             @if($wahana->image)
-              <img src="{{ asset('storage/' . $wahana->image) }}" class="card-img-top" alt="{{ $wahana->name }}" style="height: 180px; object-fit: cover;">
+              <img src="{{ asset('uploads/' . $wahana->image) }}" class="card-img-top" alt="{{ $wahana->name }}" style="height: 220px; object-fit: cover; width: 100%;">
             @else
-              {{-- Placeholder jika tidak ada gambar --}}
-              <div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
+              <div class="bg-light d-flex align-items-center justify-content-center card-img-top" style="min-height: 220px;">
                 <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
               </div>
             @endif
-            <div class="card-body d-flex flex-column align-items-center justify-content-center p-4">
+            <div class="card-body d-flex flex-column align-items-center p-4 flex-grow-1">
               <h5 class="card-title fw-semibold">{{ $wahana->name }}</h5>
-              {{-- Anda bisa menambahkan deskripsi singkat di sini jika ada --}}
               <p class="card-text small text-muted">{{ Str::limit($wahana->description, 100) }}</p>
+              <div class="mt-auto w-100 pt-3">
+                @if($wahana->video_embed_url)
+                  <a href="{{ $wahana->video_embed_url }}" target="_blank" class="btn btn-sm btn-outline-danger w-100 mb-2" title="Lihat Video {{ $wahana->name }}">
+                    <i class="bi bi-play-circle-fill"></i> Lihat Video
+                  </a>
+                @endif
+              </div>
             </div>
-            {{-- Jika ada halaman detail untuk setiap wahana, Anda bisa menambahkan link di sini --}}
-            {{-- <div class="card-footer bg-transparent border-0 pt-0 pb-3">
-              <a href="#" class="btn btn-sm btn-outline-primary">Pelajari Lebih Lanjut</a>
-            </div> --}}
           </div>
         </div>
       @endforeach

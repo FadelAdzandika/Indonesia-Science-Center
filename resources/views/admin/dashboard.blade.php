@@ -122,7 +122,7 @@
         <tr>
           <td>
             @if($wahana->image)
-              <img src="{{ asset('uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" width="100" style="object-fit: cover; height: 60px;">
+              <img src="{{ asset('public/uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" width="100" style="object-fit: cover; height: 60px;">
             @else
               <span class="text-muted">N/A</span>
             @endif
@@ -159,7 +159,7 @@
         <tr>
           <td>
             @if($wahana->image)
-              <img src="{{ asset('uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" width="100" style="object-fit: cover; height: 60px;">
+              <img src="{{ asset('public/uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" width="100" style="object-fit: cover; height: 60px;">
             @else
               <span class="text-muted">N/A</span>
             @endif
@@ -193,7 +193,7 @@
       <tr>
         <td>
           @if($event->thumbnail)
-            <img src="{{ asset('uploads/' . $event->thumbnail) }}" alt="Event Thumbnail" width="100">
+            <img src="{{ asset('public/uploads/' . $event->thumbnail) }}" alt="Event Thumbnail" width="100">
           @else
             Tidak ada gambar
           @endif
@@ -232,7 +232,7 @@
       <tr>
         <td>
           @if($competition->thumbnail)
-            <img src="{{ asset('uploads/' . $competition->thumbnail) }}" alt="Competition Thumbnail" width="100">
+            <img src="{{ asset('public/uploads/' . $competition->thumbnail) }}" alt="Competition Thumbnail" width="100">
           @else
             Tidak ada gambar
           @endif

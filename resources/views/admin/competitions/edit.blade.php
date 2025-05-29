@@ -39,7 +39,7 @@
             <label for="thumbnail" class="form-label">Thumbnail (Gambar)</label>
             <input type="file" class="form-control" id="thumbnail" name="thumbnail">
             @if($competition->thumbnail)
-                <img src="{{ asset('storage/' . $competition->thumbnail) }}" alt="{{ $competition->title }}" width="150" class="mt-2">
+                <img src="{{ asset('public/uploads/' . $competition->thumbnail) }}" alt="{{ $competition->title }}" width="150" class="mt-2">
                 <p><small>Kosongkan jika tidak ingin mengganti thumbnail.</small></p>
             @endif
         </div>

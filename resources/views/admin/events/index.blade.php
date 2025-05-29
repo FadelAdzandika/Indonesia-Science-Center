@@ -28,15 +28,15 @@
       <tr>
         <td>
           @if($event->thumbnail)
-            <img src="{{ asset('storage/' . $event->thumbnail) }}" alt="Event Thumbnail" width="100">
+            <img src="{{ asset('public/uploads/' . $event->thumbnail) }}" alt="Event Thumbnail" width="100">
           @else
             Tidak ada gambar
           @endif
         </td>
         <td><a href="{{ route('admin.events.show', $event->id) }}">{{ $event->title }}</a></td>
         <td>{{ $event->event_date ? $event->event_date->format('d M Y') : '-' }}</td>
-        <td>
-          <a href="{{ route('admin.events.show', $event->id) }}" class="btn btn-info btn-sm">Lihat</a>
+        <td class="text-nowrap">
+          {{-- <a href="{{ route('admin.events.show', $event->id) }}" class="btn btn-info btn-sm">Lihat</a> --}}
           @if(request()->route()->getPrefix() === '/admin')
             <a href="{{ route('admin.events.edit', $event->id) }}" class="btn btn-warning btn-sm">Edit</a>
             <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST" class="d-inline">

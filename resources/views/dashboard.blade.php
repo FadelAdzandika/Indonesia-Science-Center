@@ -85,6 +85,12 @@
 .slider-nav-button.prev { left: 10px; }
 .slider-nav-button.next { right: 10px; }
 </style>
+<style>
+/* Additional styles for Wahana Galeri Slider if needed, can be merged with above */
+.wahana-gallery-slider-container .teaser-gallery-slide { /* Re-using teaser-gallery-slide for consistency */
+    width: 250px; /* Adjust width for wahana cards if different */
+}
+</style>
 @endpush
 
 @section('content')
@@ -121,11 +127,16 @@
     <div class="row justify-content-center">
       @if(isset($latestWahanas) && $latestWahanas->isNotEmpty())
         @foreach($latestWahanas as $wahana)
-          <div class="col-6 col-md-3 mb-4"> {{-- mb-4 untuk spasi jika ada beberapa baris di mobile --}}
+          <div class="col-6 col-md-3 mb-4 d-flex align-items-stretch"> {{-- Tambahkan d-flex align-items-stretch --}}
             <div class="isc-card h-100 d-flex flex-column text-center"> {{-- Tambahkan text-center agar konten di tengah --}}
               {{-- Jika ingin menampilkan gambar wahana di sini --}}
               @if($wahana->image)
-                <img src="{{ asset('uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" class="card-img-top" style="object-fit: cover; height: 120px; border-top-left-radius: 18px; border-top-right-radius: 18px;">
+                <img src="{{ asset('public/uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" class="card-img-top" style="object-fit: cover; border-top-left-radius: 18px; border-top-right-radius: 18px;"> {{-- Hapus height: 120px --}}
+              @else
+                {{-- Placeholder jika tidak ada gambar, beri min-height agar tidak terlalu kecil --}}
+              <div class="d-flex align-items-center justify-content-center" style="min-height: 120px; background-color: #e9ecef; border-top-left-radius: 18px; border-top-right-radius: 18px;">
+                  <i class="bi bi-image text-muted" style="font-size: 2.5rem;"></i>
+              </div>
               @endif
               {{-- <div class="isc-card-icon {{ $wahana->color ?? 'text-primary' }}"><i class="bi {{ $wahana->icon ?? 'bi-app-indicator' }}"></i></div> --}} {{-- Ikon dan warna sudah dihapus dari form, jadi ini mungkin tidak relevan lagi atau bisa di-default-kan --}}
               <div class="isc-card-title mt-2">{{ $wahana->name }}</div>
@@ -154,17 +165,133 @@
 <section id="wahana" class="py-5 bg-section-yellow">
   <div class="container">
     <div class="section-title">WAHANA GALERI ISC</div>
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
-      @if(isset($allWahanas) && $allWahanas->isNotEmpty())
-        @foreach($allWahanas as $wahana)
-          <div class="col">
-            <div class="isc-card h-100 d-flex flex-column">
-              @if($wahana->image)
-                <img src="{{ asset('uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" class="card-img-top" style="object-fit: cover; height: 120px; border-top-left-radius: 18px; border-top-right-radius: 18px;">
+     @if(isset($allWahanas) && $allWahanas->isNotEmpty())
+      <div class="teaser-gallery-slider-container wahana-gallery-slider-container"> {{-- Tambahkan kelas unik untuk slider wahana --}}
+          <div class="teaser-gallery-slider wahana-gallery-slider"> {{-- Tambahkan kelas unik untuk slider wahana --}}
+              @foreach($allWahanas as $wahana)
+                  <div class="teaser-gallery-slide"> {{-- Menggunakan kelas yang sama untuk styling slide --}}
+                      <div class="isc-card h-100 d-flex flex-column">
+                          @if($wahana->image)
+                              <img src="{{ asset('public/uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" class="card-img-top" style="object-fit: cover; border-top-left-radius: 18px; border-top-right-radius: 18px; height: 180px;"> {{-- Beri tinggi tetap agar seragam di slider --}}
+                          @else
+                              <div class="d-flex align-items-center justify-content-center" style="min-height: 180px; background-color: #e9ecef; border-top-left-radius: 18px; border-top-right-radius: 18px;">
+                                  <i class="bi bi-image text-muted" style="font-size: 2.5rem;"></i>
+                              </div>
+                          @endif
+                          <div class="isc-card-body p-3 d-flex flex-column flex-grow-1">
+                            <div class="isc-card-title mt-2 text-center">{{ $wahana->name }}</div>
+                            @if($wahana->video_embed_url)
+                              <div class="mt-auto pt-2 text-center">
+                                <a href="{{ $wahana->video_embed_url }}" target="_blank" class="btn btn-sm btn-outline-danger w-100" title="Lihat Video {{ $wahana->name }}">
+                                  <i class="bi bi-play-circle-fill"></i> Lihat Video
+                                </a>
+                              </div>
+                            @endif
+                          </div>
+                      </div>
+                  </div>
+              @endforeach
+          </div>
+          @if($allWahanas->count() > 3) {{-- Sesuaikan angka 3 dengan jumlah slide yang terlihat --}}
+              <button class="slider-nav-button prev wahana-prev" onclick="slideWahanaGallery('prev')"><i class="bi bi-chevron-left"></i></button>
+              <button class="slider-nav-button next wahana-next" onclick="slideWahanaGallery('next')"><i class="bi bi-chevron-right"></i></button>
+          @endif
+      </div>
+    @else
+      <div class="col-12"><p class="text-center text-muted">Belum ada wahana yang terdaftar.</p></div>
+    @endif
+  </div>
+</section>
+
+<!-- Science Activity Program -->
+<section id="science-activity-program" class="py-5">
+  <div class="container">
+    <div class="section-title">SCIENCE ACTIVITY PROGRAM</div>
+    <p class="text-center lead mb-5" style="font-size: 1.25rem; color: #555;">
+        Kegiatan Edukatif & Interaktif yang Siap Menyapa Anda.<br>
+        Tak hanya berkunjung, Anda juga bisa belajar sambil bermain lewat program sains kami yang dikemas modern dan menyenangkan.
+    </p>
+    <div class="row justify-content-center">
+      <div class="col-6 col-md-3 d-flex align-items-stretch"> {{-- Tambahkan d-flex align-items-stretch --}}
+        <div class="isc-card h-100 d-flex flex-column text-center"> {{-- Tambahkan text-center --}}
+          <div class="isc-card-icon"><i class="bi bi-truck"></i></div>
+          <div class="isc-card-title">Mobile Science X</div>
+          <p class="small text-muted px-2 flex-grow-1">{{ Str::limit('Wahana sains keliling yang datang langsung ke sekolah atau komunitas Anda.', 70) }}</p>
+          <div class="mt-auto p-2">
+            <a href="{{ route('gallery.isc.index') }}" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 d-flex align-items-stretch"> {{-- Tambahkan d-flex align-items-stretch --}}
+        <div class="isc-card h-100 d-flex flex-column text-center"> {{-- Tambahkan text-center --}}
+          <div class="isc-card-icon">
+            <img src="{{ asset('images/flask.png') }}" alt="Sanggar Kerja" style="height:48px;">
+          </div>
+          <div class="isc-card-title">Sanggar Kerja</div>
+          <p class="small text-muted px-2 flex-grow-1">{{ Str::limit('Workshop sains tematik yang dirancang khusus di lokasi ISC.', 70) }}</p>
+          <div class="mt-auto p-2">
+            <a href="{{ route('gallery.isc.index') }}" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3 d-flex align-items-stretch"> {{-- Tambahkan d-flex align-items-stretch --}}
+        <div class="isc-card h-100 d-flex flex-column text-center"> {{-- Tambahkan text-center --}}
+          <div class="isc-card-icon"><i class="bi bi-mic"></i></div>
+          <div class="isc-card-title">Science Show</div>
+          <p class="small text-muted px-2 flex-grow-1">{{ Str::limit('Pertunjukan ilmiah yang spektakuler dan edukatif dengan tema berbeda setiap bulan.', 70) }}</p>
+          <div class="mt-auto p-2">
+            <a href="{{ route('gallery.isc.index') }}" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-6 col-md-3 d-flex align-items-stretch"> {{-- Tambahkan d-flex align-items-stretch --}}
+        <div class="isc-card h-100 d-flex flex-column text-center"> {{-- Tambahkan text-center --}}
+          <div class="isc-card-icon mb-2" style="height:48px; display:flex; align-items:center; justify-content:center;">
+            <img src="{{ asset('images/tenda.png') }}" alt="Science Camp" style="height:48px; max-width:100%;">
+          </div>
+          <div class="isc-card-title">Science Camp</div>
+          <p class="small text-muted px-2 flex-grow-1">{{ Str::limit('Berkemah sambil belajar sains dan bermain outdoor games yang seru.', 70) }}</p>
+          <div class="mt-auto p-2"> {{-- mt-auto pushes this div to the bottom --}}
+            <a href="{{ route('gallery.isc.index') }}" class="btn btn-sm btn-outline-primary">Lihat Galeri</a>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Event & Kompetisi -->
+<section class="py-5 bg-section-green">
+  <div class="container">
+    <div class="section-title">EVENT & KOMPETISI</div>
+    <div class="row justify-content-center">
+      @if(isset($events) && $events->isNotEmpty())
+        @foreach($events as $event)
+          <div class="col-6 col-md-3 mb-4 d-flex align-items-stretch">
+            <div class="isc-card h-100 d-flex flex-column w-100 shadow-sm border-0 rounded-lg overflow-hidden">
+              {{-- Menampilkan gambar thumbnail untuk event --}}
+              @if($event->thumbnail)
+                <a href="{{ route('events.show', $event) }}">
+                  <img src="{{ asset('public/uploads/' . $event->thumbnail) }}" alt="{{ $event->title ?? 'Gambar Event' }}" class="card-img-top" style="border-top-left-radius: 10px; border-top-right-radius: 10px; height: 150px; object-fit: cover;">
+                </a>
               @else
-                {{-- Placeholder jika tidak ada gambar --}}
-                <div class="d-flex align-items-center justify-content-center" style="height: 120px; background-color: #e9ecef; border-top-left-radius: 18px; border-top-right-radius: 18px;">
-                    <i class="bi bi-image text-muted" style="font-size: 2.5rem;"></i>
+                <a href="{{ route('events.show', $event) }}">
+                  <div class="bg-secondary d-flex align-items-center justify-content-center card-img-top" style="min-height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                    <span class="text-white-50">Gambar tidak tersedia</span>
+                  </div>
+                </a>
+              @endif
+              <div class="isc-card-body p-3 d-flex flex-column flex-grow-1">
+                <span class="badge bg-primary mb-2">EVENT</span>
+                <div class="isc-card-title">{{ $event->title ?? 'Judul Event' }}</div>
+                {{-- Menampilkan deskripsi singkat event --}}
+                @if($event->description)
+                  <p class="isc-card-text small text-muted mt-2 mb-0 flex-grow-1">{{ Str::limit(strip_tags($event->description), 70) }}</p>
+                @endif
+              </div>
+              @if(Route::has('events.show') && isset($event->id))
+                <div class="p-3 pt-0 mt-auto text-center"> {{-- mt-auto untuk mendorong tombol ke bawah jika card flex --}}
+                  <a href="{{ route('events.show', $event->id) }}" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
                 </div>
               @endif
               <div class="isc-card-title mt-2">{{ $wahana->name }}</div>
@@ -249,13 +376,21 @@
     <div class="row justify-content-center">
       @if(isset($events) && $events->isNotEmpty())
         @foreach($events as $event)
-          <div class="col-6 col-md-3 mb-4">
-            <div class="isc-card h-100 d-flex flex-column">
+          <div class="col-6 col-md-3 mb-4 d-flex align-items-stretch">
+            <div class="isc-card h-100 d-flex flex-column w-100 shadow-sm border-0 rounded-lg overflow-hidden">
               {{-- Menampilkan gambar thumbnail untuk event --}}
               @if($event->thumbnail)
-                <img src="{{ asset('uploads/' . $event->thumbnail) }}" alt="{{ $event->title ?? 'Gambar Event' }}" class="card-img-top" style="object-fit: cover; height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                <a href="{{ route('events.show', $event) }}">
+                  <img src="{{ asset('public/uploads/' . $event->thumbnail) }}" alt="{{ $event->title ?? 'Gambar Event' }}" class="card-img-top" style="border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                </a>
+              @else
+                <a href="{{ route('events.show', $event) }}">
+                  <div class="bg-secondary d-flex align-items-center justify-content-center card-img-top" style="min-height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                    <span class="text-white-50">Gambar tidak tersedia</span>
+                  </div>
+                </a>
               @endif
-              <div class="isc-card-body p-3 flex-grow-1"> {{-- flex-grow-1 untuk mengisi ruang --}}
+              <div class="isc-card-body p-3 d-flex flex-column flex-grow-1">
                 <span class="badge bg-primary mb-2">EVENT</span>
                 <div class="isc-card-title">{{ $event->title ?? 'Judul Event' }}</div>
                 {{-- Menampilkan deskripsi singkat event --}}
@@ -275,13 +410,21 @@
 
       @if(isset($competitions) && $competitions->isNotEmpty())
         @foreach($competitions as $competition)
-          <div class="col-6 col-md-3 mb-4">
-            <div class="isc-card h-100 d-flex flex-column">
+          <div class="col-6 col-md-3 mb-4 d-flex align-items-stretch">
+            <div class="isc-card h-100 d-flex flex-column w-100 shadow-sm border-0 rounded-lg overflow-hidden">
               {{-- Menampilkan gambar thumbnail untuk kompetisi (jika ada dan diinginkan) --}}
               @if($competition->thumbnail)
-                <img src="{{ asset('uploads/' . $competition->thumbnail) }}" alt="{{ $competition->title ?? 'Gambar Kompetisi' }}" class="card-img-top" style="object-fit: cover; height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                <a href="{{ route('competitions.show', $competition) }}">
+                  <img src="{{ asset('public/uploads/' . $competition->thumbnail) }}" alt="{{ $competition->title ?? 'Gambar Kompetisi' }}" class="card-img-top" style="border-top-left-radius: 10px; border-top-right-radius: 10px;"> {{-- Hapus object-fit dan height --}}
+                </a>
+              @else
+                <a href="{{ route('competitions.show', $competition) }}">
+                  <div class="bg-secondary d-flex align-items-center justify-content-center card-img-top" style="min-height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px;">
+                    <span class="text-white-50">Gambar tidak tersedia</span>
+                  </div>
+                </a>
               @endif
-              <div class="isc-card-body p-3 flex-grow-1">
+              <div class="isc-card-body p-3 d-flex flex-column flex-grow-1"> {{-- Pastikan d-flex flex-column --}}
                 <span class="badge bg-success mb-2">KOMPETISI</span>
                 <div class="isc-card-title">{{ $competition->title ?? 'Judul Kompetisi' }}</div>
                 {{-- Menampilkan deskripsi singkat kompetisi --}}
@@ -322,7 +465,7 @@
                 @foreach($teaserPhotos as $photo)
                     <div class="teaser-gallery-slide">
                         <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden image-hover-overlay-container">
-                            <img src="{{ asset('uploads/' . $photo->image_path) }}" class="card-img-top" alt="{{ $photo->title ?? 'Foto Galeri ISC' }}" style="height: 200px; object-fit: cover; display: block;">
+                            <img src="{{ asset('public/uploads/' . $photo->image_path) }}" class="card-img-top" alt="{{ $photo->title ?? 'Foto Galeri ISC' }}" style="height: 200px; object-fit: cover; display: block;">
                             <div class="image-hover-overlay">
                                 @if($photo->title)
                                     <div class="photo-title">{{ $photo->title }}</div>

@@ -24,7 +24,7 @@
       <label for="thumbnail" class="form-label">Thumbnail (Gambar)</label>
       <input type="file" name="thumbnail" id="thumbnail" class="form-control">
       @if($event->thumbnail)
-        <img src="{{ asset('storage/' . $event->thumbnail) }}" alt="Event Thumbnail" width="100" class="mt-2">
+        <img src="{{ asset('publicuploads/' . $event->thumbnail) }}" alt="Event Thumbnail" width="100" class="mt-2">
         <p><small>Kosongkan jika tidak ingin mengganti thumbnail.</small></p>
       @endif
     </div>

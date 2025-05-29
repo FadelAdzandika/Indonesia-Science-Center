@@ -8,7 +8,7 @@
     <div class="col-lg-10">
       <div class="card shadow-sm border-0 rounded-lg">
         @if($competition->thumbnail)
-          <img src="{{ asset('storage/' . $competition->thumbnail) }}" class="card-img-top rounded-top-lg" alt="{{ $competition->title ?? 'Gambar Kompetisi' }}" style="max-height: 450px; object-fit: cover;">
+          <img src="{{ asset('public/uploads/' . $competition->thumbnail) }}" class="card-img-top rounded-top-lg" alt="{{ $competition->title ?? 'Gambar Kompetisi' }}" style="max-height: 450px; object-fit: cover;">
         @endif
         <div class="card-body p-4 p-md-5">
           <h1 class="card-title h2 mb-3">{{ $competition->title ?? 'Judul Kompetisi Tidak Tersedia' }}</h1>

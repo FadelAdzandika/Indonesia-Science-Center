@@ -51,8 +51,12 @@ class WahanaController extends Controller
         $wahana->video_embed_url = $request->video_embed_url; // Tambahkan baris ini
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('wahanas', 'public_uploads'); // Pastikan disk 'public_uploads' sudah dikonfigurasi di filesystems.php
-            $wahana->image = $imagePath;
+            $file = $request->file('image');
+            // Buat nama file unik untuk menghindari penimpaan dan masalah karakter
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+                        $file->move(Wahana::getUploadPath(), $filename);
+            // Simpan path relatif ke database
+            $wahana->image = Wahana::getRelativePath($filename);
         }
 
         $wahana->save();
@@ -92,11 +96,19 @@ class WahanaController extends Controller
 
         if ($request->hasFile('image')) {
             // Hapus gambar lama jika ada
-            if ($wahana->image) {
-                Storage::disk('public_uploads')->delete($wahana->image);
+             if ($wahana->image && file_exists(Wahana::getUploadPath() . '/' . basename($wahana->image))) {
+                unlink(Wahana::getUploadPath() . '/' . basename($wahana->image));
             }
-            $imagePath = $request->file('image')->store('wahanas', 'public_uploads');
-            $wahana->image = $imagePath;
+            $file = $request->file('image');
+            // Buat nama file unik
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+            $file->move(Wahana::getUploadPath(), $filename);
+
+            // Simpan path relatif ke database
+            $wahana->image = Wahana::getRelativePath($filename);
+        } else {
+            // Jika tidak ada file baru, jangan ubah field image
+            // $wahana->image tetap berisi nilai lama
         }
 
         $wahana->save();
@@ -111,8 +123,8 @@ class WahanaController extends Controller
     public function destroy(Wahana $wahana)
     {
         // Hapus gambar terkait jika ada
-        if ($wahana->image) {
-            Storage::disk('public_uploads')->delete($wahana->image);
+        if ($wahana->image && file_exists(Wahana::getUploadPath() . '/' . basename($wahana->image))) {
+            unlink(Wahana::getUploadPath() . '/' . basename($wahana->image));
         }
 
         $wahana->delete();

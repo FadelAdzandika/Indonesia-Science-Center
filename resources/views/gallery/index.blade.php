@@ -71,7 +71,7 @@
                                 <div class="card gallery-item h-100">
                                     <a href="{{ asset('uploads/' . $photo->image_path) }}" data-bs-toggle="modal" data-bs-target="#galleryModal" data-bs-image="{{ asset('uploads/' . $photo->image_path) }}" data-bs-title="{{ $photo->title ?? $category->name }}">
                                         <div class="gallery-img-container">
-                                            <img src="{{ asset('uploads/' . $photo->image_path) }}" class="card-img-top" alt="{{ $photo->title ?? 'Foto dari ' . $category->name }}" style="height: 220px; object-fit: cover; cursor: pointer;">
+                                            <img src="{{ asset('public/uploads/' . $photo->image_path) }}" class="card-img-top" alt="{{ $photo->title ?? 'Foto dari ' . $category->name }}" style="height: 220px; object-fit: cover; cursor: pointer;">
                                         </div>
                                     </a>
                                     @if($photo->title || $photo->description)

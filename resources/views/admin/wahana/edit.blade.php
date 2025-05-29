@@ -31,7 +31,7 @@
             <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image">
             @if ($wahana->image)
                 <div class="mt-2">
-                    <img src="{{ asset('storage/' . $wahana->image) }}" alt="{{ $wahana->name }}" style="max-height: 150px; border-radius: 8px;">
+                    <img src="{{ asset('public/uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" style="max-height: 150px; border-radius: 8px;">
                     <p class="small text-muted">Gambar saat ini</p>
                 </div>
             @endif

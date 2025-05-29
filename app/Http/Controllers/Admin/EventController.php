@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Event;
+use Illuminate\Support\Str; // Tambahkan ini
+use Illuminate\Support\Facades\Storage; // Tambahkan ini
+use Illuminate\Support\Facades\Route; // Tambahkan ini
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+
+use App\Http\Controllers\Controller;
 
 class EventController extends Controller
 {
@@ -14,92 +17,110 @@ class EventController extends Controller
      */
     public function index()
     {
+        // Periksa apakah rute yang sedang diakses memiliki prefix '/admin'
+        if (request()->route()->getPrefix() === '/admin') {
+            // Jika ya, ini adalah permintaan untuk daftar event di sisi admin
+            $events = Event::latest()->paginate(10);
+            return view('admin.events.index', compact('events'));
+        }
+        // Jika tidak, ini adalah permintaan untuk daftar event di sisi publik
         $events = Event::latest()->paginate(10);
-        // Ensure you have a view file at: resources/views/admin/events/index.blade.php
-        return view('admin.events.index', compact('events'));
+        return view('events.index', compact('events')); // Tampilkan view publik
     }
 
     /**
      * Show the form for creating a new resource.
+     * (Biasanya untuk admin)
      */
     public function create()
     {
-        // Ensure you have a view file at: resources/views/admin/events/create.blade.php
+        // Pastikan view ini ada: resources/views/admin/events/create.blade.php
         return view('admin.events.create');
     }
 
     /**
      * Store a newly created resource in storage.
+     * (Biasanya untuk admin)
      */
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'event_date' => 'nullable|date',
+            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Contoh validasi thumbnail
         ]);
 
-        $data = $request->only(['title', 'description', 'event_date']);
+        $data = $request->all();
 
         if ($request->hasFile('thumbnail')) {
-            // Assumes 'public' disk is configured for storage/app/public
-            // and you've run `php artisan storage:link`
-            $data['thumbnail'] = $request->file('thumbnail')->store('events', 'public_uploads');
+            $path = $request->file('thumbnail')->store('event_thumbnails', 'public');
+            $data['thumbnail'] = $path;
         }
 
         Event::create($data);
 
-        return redirect()->route('admin.events.index')->with('success', 'Event berhasil ditambahkan.');
+        return redirect()->route('admin.events.index') // Asumsi ada route admin.events.index
+                         ->with('success', 'Event berhasil ditambahkan.');
+    }
+
+    public function show(Event $event)
+    {
+        return view('admin.events.show', compact('event'));
     }
 
     /**
      * Show the form for editing the specified resource.
+     * (Biasanya untuk admin)
      */
     public function edit(Event $event)
     {
-        // Ensure you have a view file at: resources/views/admin/events/edit.blade.php
+        // Pastikan view ini ada: resources/views/admin/events/edit.blade.php
         return view('admin.events.edit', compact('event'));
     }
 
     /**
      * Update the specified resource in storage.
+     * (Biasanya untuk admin)
      */
     public function update(Request $request, Event $event)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'event_date' => 'nullable|date',
+            'thumbnail' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $data = $request->only(['title', 'description', 'event_date']);
+        $data = $request->all();
 
         if ($request->hasFile('thumbnail')) {
-            // Delete old thumbnail if it exists
+            // Hapus thumbnail lama jika ada
             if ($event->thumbnail) {
-                Storage::disk('public_uploads')->delete($event->thumbnail);
+                Storage::disk('public')->delete($event->thumbnail);
             }
-            $data['thumbnail'] = $request->file('thumbnail')->store('events', 'public_uploads');
+            $path = $request->file('thumbnail')->store('event_thumbnails', 'public');
+            $data['thumbnail'] = $path;
         }
 
         $event->update($data);
 
-        return redirect()->route('admin.events.index')->with('success', 'Event berhasil diperbarui.');
+        return redirect()->route('admin.events.index') // Asumsi ada route admin.events.index
+                         ->with('success', 'Event berhasil diperbarui.');
     }
 
     /**
      * Remove the specified resource from storage.
+     * (Biasanya untuk admin)
      */
     public function destroy(Event $event)
     {
-        // Delete thumbnail if it exists
+        // Hapus thumbnail jika ada sebelum menghapus event
         if ($event->thumbnail) {
-            Storage::disk('public_uploads')->delete($event->thumbnail);
+            Storage::disk('public')->delete($event->thumbnail);
         }
         $event->delete();
-
-        return redirect()->route('admin.events.index')->with('success', 'Event berhasil dihapus.');
+        return redirect()->route('admin.events.index') // Asumsi ada route admin.events.index
+                         ->with('success', 'Event berhasil dihapus.');
     }
 }

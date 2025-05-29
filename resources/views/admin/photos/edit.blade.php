@@ -44,9 +44,7 @@
             @if ($photo->image_path)
                 <div class="mt-2">
                     <p>Gambar saat ini:</p>
-                    {{-- Sesuaikan path jika Anda menggunakan disk 'public' dan storage:link --}}
-                    {{-- <img src="{{ asset('storage/' . $photo->image_path) }}" alt="{{ $photo->title ?? 'Foto' }}" width="150" class="img-thumbnail"> --}}
-                    <img src="{{ asset('uploads/' . $photo->image_path) }}" alt="{{ $photo->title ?? 'Foto' }}" width="150" class="img-thumbnail">
+                    <img src="{{ asset('public/uploads/' . $photo->image_path) }}" alt="{{ $photo->title ?? 'Foto' }}" width="150" class="img-thumbnail">
                 </div>
             @endif
         </div>

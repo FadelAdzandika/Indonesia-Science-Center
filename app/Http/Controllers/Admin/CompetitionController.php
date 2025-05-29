@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Competition;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class CompetitionController extends Controller
 {
@@ -46,13 +45,25 @@ class CompetitionController extends Controller
         if ($request->hasFile('thumbnail')) {
             // Assumes 'public' disk is configured for storage/app/public
             // and you've run `php artisan storage:link`
-            $data['thumbnail'] = $request->file('thumbnail')->store('competitions', 'public_uploads');
+            $file = $request->file('thumbnail');
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+            
+            $file->move(Competition::getUploadPath(), $filename);
+            $data['thumbnail'] = Competition::getRelativePath($filename);
+        } else {
+            $data['thumbnail'] = null; // Atau biarkan kosong jika field di DB nullable
         }
 
         Competition::create($data);
 
         return redirect()->route('admin.competitions.index')->with('success', 'Kompetisi berhasil ditambahkan.');
     }
+
+    public function show(Competition $competition)
+    {
+    return view('admin.competitions.show', compact('competition'));
+    }
+    
 
     /**
      * Show the form for editing the specified resource.
@@ -65,7 +76,7 @@ class CompetitionController extends Controller
 
     public function update(Request $request, Competition $competition)
     {
-        $request->validate([
+        $request->validate([ // Line 53 (approx)
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -73,17 +84,21 @@ class CompetitionController extends Controller
             'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
 
-        $data = $request->only(['title', 'description', 'start_date', 'end_date']);
+        $data = $request->only(['title', 'description', 'start_date', 'end_date']); // Line 60 (approx)
 
-        if ($request->hasFile('thumbnail')) {
+        if ($request->hasFile('thumbnail')) { // Line 62 (approx)
             // Delete old thumbnail if it exists
-            if ($competition->thumbnail) {
-                Storage::disk('public_uploads')->delete($competition->thumbnail);
+            if ($competition->thumbnail && file_exists(Competition::getUploadPath() . '/' . basename($competition->thumbnail))) { // Line 64 (approx)
+                unlink(Competition::getUploadPath() . '/' . basename($competition->thumbnail));
             }
-            $data['thumbnail'] = $request->file('thumbnail')->store('competitions', 'public_uploads');
+            $file = $request->file('thumbnail');
+            $filename = time() . '_' . preg_replace('/\s+/', '_', $file->getClientOriginalName());
+            $file->move(Competition::getUploadPath(), $filename);
+            $data['thumbnail'] = Competition::getRelativePath($filename);
+            // Jika tidak ada file baru, $data['thumbnail'] tidak akan di-set, sehingga nilai lama dipertahankan saat update
         }
 
-        $competition->update($data);
+        $competition->update($data); // Line 73 (approx)
 
         return redirect()->route('admin.competitions.index')->with('success', 'Kompetisi berhasil diperbarui.');
     }
@@ -94,8 +109,8 @@ class CompetitionController extends Controller
     public function destroy(Competition $competition)
     {
         // Delete thumbnail if it exists
-        if ($competition->thumbnail) {
-            Storage::disk('public_uploads')->delete($competition->thumbnail);
+        if ($competition->thumbnail && file_exists(Competition::getUploadPath() . '/' . basename($competition->thumbnail))) {
+            unlink(Competition::getUploadPath() . '/' . basename($competition->thumbnail));
         }
         $competition->delete();
 

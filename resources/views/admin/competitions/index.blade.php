@@ -33,7 +33,7 @@
                     <td>{{ $competition->id }}</td>
                     <td>
                         @if($competition->thumbnail)
-                            <img src="{{ asset('storage/' . $competition->thumbnail) }}" alt="{{ $competition->title }}" width="100" style="object-fit: cover; height: 60px;">
+                            <img src="{{ asset('public/uploads/' . $competition->thumbnail) }}" alt="{{ $competition->title }}" width="100" style="object-fit: cover; height: 60px;">
                         @else
                             <span class="text-muted">N/A</span>
                         @endif
@@ -42,7 +42,6 @@
                     <td>{{ $competition->start_date ? $competition->start_date->format('d M Y') : '-' }}</td>
                     <td>{{ $competition->end_date ? $competition->end_date->format('d M Y') : '-' }}</td>
                     <td>
-                        <a href="{{ route('admin.competitions.show', $competition->id) }}" class="btn btn-sm btn-info" title="Lihat"><i class="bi bi-eye"></i></a>
                         <a href="{{ route('admin.competitions.edit', $competition->id) }}" class="btn btn-sm btn-warning" title="Edit"><i class="bi bi-pencil"></i></a>
                         <form action="{{ route('admin.competitions.destroy', $competition->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kompetisi ini?');">
                             @csrf

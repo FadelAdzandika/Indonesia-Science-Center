@@ -36,7 +36,7 @@
                     <td>{{ $wahana->id }}</td>
                     <td>
                         @if($wahana->image)
-                            <img src="{{ asset('storage/' . $wahana->image) }}" alt="{{ $wahana->name }}" width="100" style="object-fit: cover; height: 70px; border-radius: 4px;">
+                            <img src="{{ asset('public/uploads/' . $wahana->image) }}" alt="{{ $wahana->name }}" width="100" style="object-fit: cover; height: 70px; border-radius: 4px;">
                         @else
                             <span class="text-muted">N/A</span>
                         @endif
